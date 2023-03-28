@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{%block title%}
+KSA100 - EXAMEN
+{%endblock%}
+
+{% block h1 %}
+{{ question }}
+{% endblock %}
+<br>
+{% block form %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <button type="submit" id="btnValider"> valider </button>
+{% endblock %}
+
+{% block script %}
+myForm.addEventListener("keydown", function(e){if (e.keyCode==13) e.preventDefault()} );
+setInterval(function(){
+    myForm.submit();
+    btnValider.click();
+    alert("Temps écoulé.");
+}, 40000)
+
+{% endblock %}

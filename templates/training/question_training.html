@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{%block h1%}
+{{ question }}
+{%endblock%}
+
+
+{%block form%}
+
+{% csrf_token %}
+<h3>
+{{ form.as_p }}
+<button type="submit" id="btnValider"> valider </button>
+<br> <br> <br>
+<u> Réponse exacte </u> : {{ correct_answer }}
+<br> <br>
+<u> Réponse donnée dans les + ou - 10% </u>: {{ result }}
+<br> <br>
+<u> Explications : </u>
+{{ explanation|escape|linebreaks }}
+</h3>
+<br> <br>
+<h4>
+<a href="/training/{{ id_question }}">Nouvelle question</a>
+<br> <br>
+<a href="/training/{{ question_suivante }}">Question suivante</a>
+<br> <br>
+<a href="/training">Retour à l'accueil entrainement</a>
+</h4>
+
+{%endblock%}
+
+
+

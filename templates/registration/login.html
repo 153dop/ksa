@@ -1,0 +1,54 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+
+
+</head>
+<body>
+
+    <img >
+    <img src="/static/css/CFAMI.png" height="80" width="100" >
+
+<!-- templates/registration/login.html -->
+<!-- we test if the user is authenticated -->
+{% if user.is_authenticated %}
+<h1 class="center">
+    Tu es connecté(e) en tant que <strong> {{ user.username }}.</strong>
+</h1>
+
+<h3 class="center">
+    <p>
+        <a href="/logout" >Se déconnecter</a>
+        <br><br>
+        <a href="/exam">EXAMEN</a>
+        <br>
+        <a href="/training">Entrainement</a>
+        <br> <br>
+        <a href="/mental_math_tricks">Astuces de calcul</a>
+    </p>
+
+</h3>
+
+<!-- if user is not authenticated, we display the authentication form: -->
+{% else %}
+<h3 class = "center">Log In</h3>
+
+<div class = "center">
+    <p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Log In</button>
+        </form>
+    </p>
+
+</div>
+
+{% endif %}
+
+</body>
+</html>
