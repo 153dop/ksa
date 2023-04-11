@@ -13,7 +13,7 @@ from .forms import ResponseForm
 # Fonction pour l'accueil utilisateur
 def home_user(request):
     if str(request.user) == "AnonymousUser":
-        return render(request, 'custom_error_page.html', {'erreur': "Il faut être connecté pour passer le mode examen."})
+        return render(request, 'custom_error_page.html', {'erreur': "you had to be connect for the exam."})
     return render(request, 'home_user.html')
 
 
@@ -21,12 +21,12 @@ def home_user(request):
 def exam(request):
     # Si l'utilisateur n'est pas connecté
     if str(request.user) == "AnonymousUser":
-        return render(request, 'custom_error_page.html', {'erreur': "Il faut être connecté pour passer le mode examen."})
+        return render(request, 'custom_error_page.html', {'erreur': "you had to be connect for the exam."})
 
     Student.objects.update_or_create(user=request.user)
     student = Student.objects.get(user=request.user)
     if not student.exam_access:
-        return render(request, 'custom_error_page.html', {'erreur': "Vous n'avez pas accès à l'examen."})
+        return render(request, 'custom_error_page.html', {'erreur': "exam acces denied."})
 
     # Création objet pour le user en cours s'il n'existe pas
     if len((VariablesUser.objects.filter(user=request.user))) == 0:
@@ -49,7 +49,7 @@ def exam(request):
         variables_user.add_indent()
         variables_user.save()
         form = ResponseForm()
-        return render(request, 'exam/question.html', {'form': form, 'question': "Prêt ? Taper 1."})
+        return render(request, 'exam/question.html', {'form': form, 'question': "READY ? Press 1."})
 
     else:
         if request.method == "POST":
@@ -78,6 +78,7 @@ def exam(request):
                         reponse_test = Response.objects.latest('id')
                         reponse_test.user = str(request.user)
                         reponse_test.question_id = Question.objects.get(pk=variables_user.i_indent - 1)
+                        reponse_test.question_title = list_exam_questions[variables_user.i_indent - 2][1]
                         reponse_test.result = False
                         reponse_test.correct_answer = list_exam_questions[variables_user.i_indent - 2][2]
 
@@ -88,6 +89,7 @@ def exam(request):
                         reponse_test = Response.objects.latest('id')
                         reponse_test.user = str(request.user)
                         reponse_test.question_id = Question.objects.get(pk=variables_user.i_indent - 1)
+                        reponse_test.question_title = list_exam_questions[variables_user.i_indent - 2][1]
                         reponse_test.result = test_result_question(given_answer, variables_user.i_indent - 1, request.user)
                         reponse_test.correct_answer = list_exam_questions[variables_user.i_indent - 2][2]
 
@@ -113,6 +115,7 @@ def exam(request):
                     reponse_test = Response.objects.latest('id')
                     reponse_test.user = str(request.user)
                     reponse_test.question_id = Question.objects.get(pk=variables_user.i_indent - 1)
+                    reponse_test.question_title = list_exam_questions[variables_user.i_indent - 2][1]
                     reponse_test.result = False
                     reponse_test.correct_answer = list_exam_questions[variables_user.i_indent - 2][2]
 
@@ -123,6 +126,7 @@ def exam(request):
                     reponse_test = Response.objects.latest('id')
                     reponse_test.user = str(request.user)
                     reponse_test.question_id = Question.objects.get(pk=variables_user.i_indent - 1)
+                    reponse_test.question_title = list_exam_questions[variables_user.i_indent - 2][1]
                     reponse_test.result = test_result_question(given_answer, variables_user.i_indent - 1, request.user)
                     reponse_test.correct_answer = list_exam_questions[variables_user.i_indent - 2][2]
 
@@ -154,6 +158,10 @@ def exam(request):
                 elif score < 75:
                     new_score.final_result = False
                 new_score.save()  # sauvegarde de l'objet créé
+
+                #fin de test exams =false
+                student.exam_access = False
+                student.save()
 
                 return render(request, 'end_test.html', {'score': score})
 
