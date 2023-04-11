@@ -20,6 +20,7 @@ class Response(models.Model):
     correct_answer = models.FloatField(null=True)
     given_answer = models.FloatField(null=True, blank=True)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE,null=True)
+    question_title=models.TextField(null=True)
     result = models.BooleanField(null=True)
 
 # Classe "Score", contint l'utilisateur, son score final, son résultat final (succès ou échec à l'examen) et la date
