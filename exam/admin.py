@@ -11,8 +11,6 @@ from django.shortcuts import render
 from django.urls import path
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
-from django.urls import reverse
-from django.contrib.admin import SimpleListFilter
 
 import csv
 
@@ -21,20 +19,43 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('title', 'liste_variable', 'liste_value', 'comment')
 
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('user', 'correct_answer', 'given_answer', 'question_id', 'result')
+    list_display = ('user', 'correct_answer', 'given_answer', 'question_id', 'question_title', 'result')
+    list_filter = ('user', 'question_id', 'result')
 
 
 # Action permettant l'export des scores sélectionnés dans un fichier csv
 def export_scores(modeladmin, request, queryset):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="scores.csv"'
-    writer = csv.writer(response, delimiter = ";")
-    writer.writerow(['Eleve', 'Score', 'Resultat', 'Date fin test'])
+    http_response = HttpResponse(content_type='text/csv')
+    http_response['Content-Disposition'] = 'attachment; filename="scores.csv"'
+    writer = csv.writer(http_response, delimiter=";")
+    writer.writerow(['Student', 'Score', 'Result', 'Date end test', 'Question 1', 'Correct answer 1', 'Given answer 1',
+                     'Result 1', 'Question 2', 'Correct answer 2', 'Given answer 2', 'Result 2', 'Question 3',
+                     'Correct answer 3', 'Given answer 3', 'Result 3', 'Question 4', 'Correct answer 4',
+                     'Given answer 4', 'Result 4', 'Question 5', 'Correct answer 5', 'Given answer 5', 'Result 5',
+                     'Question 6', 'Correct answer 6', 'Given answer 6', 'Result 6', 'Question 7', 'Correct answer 7',
+                     'Given answer 7', 'Result 7', 'Question 8', 'Correct answer 8', 'Given answer 8', 'Result 8',
+                     'Question 9', 'Correct answer 9', 'Given answer 9', 'Result 9', 'Question 10', 'Correct answer 10',
+                     'Given answer 10', 'Result 10', 'Question 11', 'Correct answer 11', 'Given answer 11', 'Result 11',
+                     'Question 12', 'Correct answer 12', 'Given answer 12', 'Result 12', 'Question 13',
+                     'Correct answer 13', 'Given answer 13', 'Result 13', 'Question 14', 'Correct answer 14',
+                     'Given answer 14', 'Result 14', 'Question 15', 'Correct answer 15', 'Given answer 15', 'Result 15',
+                     'Question 16', 'Correct answer 16', 'Given answer 16', 'Result 16', 'Question 17',
+                     'Correct answer 17', 'Given answer 17', 'Result 17', 'Question 18', 'Correct answer 18',
+                     'Given answer 18', 'Result 18', 'Question 19', 'Correct answer 19', 'Given answer 19', 'Result 19',
+                     'Question 20', 'Correct answer 20', 'Given answer 20', 'Result 20', 'Question 22',
+                     'Correct answer 21', 'Given answer 21', 'Result 21', 'Question 22', 'Correct answer 22',
+                     'Given answer 22', 'Result 22', 'Question 23', 'Correct answer 23', 'Given answer 23', 'Result 23',
+                     'Question 24', 'Correct answer 24', 'Given answer 24', 'Result 24'])
     scores = queryset.values_list('user', 'score', 'final_result', 'date_fin_test')
     for score in scores:
-        writer.writerow(score)
+        row = list(score)
+        for i in range(1,25):
+            response_question = Response.objects.filter(user=score[0]).filter(question_id=i).get()
+            questions_user = [response_question.question_title, response_question.correct_answer, response_question.given_answer, response_question.result]
+            row = row + questions_user
+        writer.writerow(row)
     messages.success(request, 'Fichier créé et téléchargé.')
-    return response
+    return http_response
 export_scores.short_description = 'Exporter les scores dans un fichier csv'
 
 class ScoreAdmin(admin.ModelAdmin):
