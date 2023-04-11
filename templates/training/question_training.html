@@ -12,20 +12,20 @@
 {{ form.as_p }}
 <button type="submit" id="btnValider"> valider </button>
 <br> <br> <br>
-<u> Réponse exacte </u> : {{ correct_answer }}
+<u> Correct answer </u> : {{ correct_answer }}
 <br> <br>
-<u> Réponse donnée dans les + ou - 10% </u>: {{ result }}
+<u> given answer +/- 10% </u>: {{ result }}
 <br> <br>
-<u> Explications : </u>
+<u> Explanations : </u>
 {{ explanation|escape|linebreaks }}
 </h3>
 <br> <br>
 <h4>
-<a href="/training/{{ id_question }}">Nouvelle question</a>
+<a href="/training/{{ id_question }}">New question</a>
 <br> <br>
-<a href="/training/{{ question_suivante }}">Question suivante</a>
+<a href="/training/{{ question_suivante }}"> Next Question /a>
 <br> <br>
-<a href="/training">Retour à l'accueil entrainement</a>
+<a href="/training">back to training page</a>
 </h4>
 
 {%endblock%}
