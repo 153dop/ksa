@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <title>Log In</title>
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
 
 
@@ -17,18 +17,18 @@
 <!-- we test if the user is authenticated -->
 {% if user.is_authenticated %}
 <h1 class="center">
-    Tu es connecté(e) en tant que <strong> {{ user.username }}.</strong>
+     Connected as <strong> {{ user.username }}.</strong>
 </h1>
 
 <h3 class="center">
     <p>
-        <a href="/logout" >Se déconnecter</a>
+        <a href="/logout" >LOG OUT</a>
         <br><br>
         <a href="/exam">EXAMEN</a>
         <br>
-        <a href="/training">Entrainement</a>
+        <a href="/training">TRAINING</a>
         <br> <br>
-        <a href="/mental_math_tricks">Astuces de calcul</a>
+        <a href="/mental_math_tricks">TIPS</a>
     </p>
 
 </h3>
